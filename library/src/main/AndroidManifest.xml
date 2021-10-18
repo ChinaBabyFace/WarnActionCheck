@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.shark.checkwarnaction">
+    -
+    <application>
+
+        <provider
+            android:name="com.shark.checkwarnaction.InitProvider"
+            android:authorities="${applicationId}.CheckWarn"
+            android:exported="false" />
+
+    </application>
+</manifest>
