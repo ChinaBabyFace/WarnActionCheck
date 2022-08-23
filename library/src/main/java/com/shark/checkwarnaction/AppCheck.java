@@ -28,8 +28,9 @@ public class AppCheck {
         hookMethod(app, "android.telephony.TelephonyManager", "getDeviceId", "获取IMEI");
         hookMethod(app, "android.content.ClipboardManager", "getPrimaryClip", "读取剪贴板内容");
         hookMethod(app, "android.location.LocationManager", "getLastKnownLocation", "获取上次定位", String.class);
-        hookMethod(app, "android.provider.Settings$Secure", "getStringForUser", "获取Android ID", ContentResolver.class,String.class,int.class);
+        hookMethod(app, "android.provider.Settings$Secure", "getStringForUser", "获取Android ID", ContentResolver.class, String.class, int.class);
         hookMethod(app, "android.app.ActivityManager", "getRunningAppProcesses", "读取手机应用列表");
+        hookMethod(app, "android.content.pm.PackageManager", "getInstalledPackages", "读取手机应用列表",int.class);
 
         //定位 相机 存储 拨打打电话 短信
     }
