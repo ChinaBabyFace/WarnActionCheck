@@ -1,11 +1,11 @@
-package com.shark.checkwarnaction;
+package com.shark.point;
 
 import android.app.ActivityManager;
-import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.util.Log;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.lody.whale.xposed.XC_MethodHook;
 import com.lody.whale.xposed.XposedHelpers;
 
@@ -14,39 +14,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-public class AppCheck {
-    public static final String TAG = "WarnAction";
-    public static long APP_START_TIME = System.currentTimeMillis();
-    public static DateFormat dateFormat = DateFormat.getDateTimeInstance();
+public class HookMethod {
 
-    public static void start(Context app) {
-        hookMethod(app, "java.net.NetworkInterface", "getHardwareAddress", "获取硬件MAC地址");
-        hookMethod(app, "android.net.wifi.WifiInfo", "getMacAddress", "获取WIFI MAC地址");
-        hookMethod(app, "java.net.NetworkInterface", "getInetAddresses", "获取IP地址");
-        hookMethod(app, "android.net.wifi.WifiInfo", "getIpAddress", "获取WIFI IP地址");
-        hookMethod(app, "android.telephony.TelephonyManager", "getDeviceId", "获取IMEI");
-        hookMethod(app, "android.content.ClipboardManager", "getPrimaryClip", "读取剪贴板内容");
-        hookMethod(app, "android.location.LocationManager", "getLastKnownLocation", "获取上次定位", String.class);
-        hookMethod(app, "android.provider.Settings$Secure", "getStringForUser", "获取Android ID", ContentResolver.class, String.class, int.class);
-        hookMethod(app, "android.app.ActivityManager", "getRunningAppProcesses", "读取手机应用列表");
-        hookMethod(app, "android.content.pm.PackageManager", "getInstalledPackages", "读取手机应用列表",int.class);
-        //定位 相机 存储 拨打打电话 短信
-    }
-
-    public static void hookMethod(Context app, String className, String methodName, String warn, Object... param) {
+    public static void hookMethod(Context app, String className, String methodName, OnHookListener listener, Object... param) {
         ClassLoader cl = app.getClassLoader();
         List<Object> list = new ArrayList<>(Arrays.asList(param));
         list.add(new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
-                Log.e(TAG, "应用启动时间: " + dateFormat.format(new Date(APP_START_TIME)));
-                Log.e(TAG, "行为触发时间: " + dateFormat.format(new Date(System.currentTimeMillis())));
-                Log.e(TAG, "触发敏感行为: " + warn);
-                Log.e(TAG, "触发敏感函数: " + className + "." + methodName);
-                Log.e(TAG, getStackTrace(className + "." + methodName, new Exception("SgccHook").getStackTrace()));
-
+                if (listener == null) return;
+                listener.onParamHooked(param);
             }
         });
         try {
