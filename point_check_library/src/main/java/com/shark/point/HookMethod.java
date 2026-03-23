@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.util.Log;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.lody.whale.xposed.XC_MethodHook;
 import com.lody.whale.xposed.XposedHelpers;
 

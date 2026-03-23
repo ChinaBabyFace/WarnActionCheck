@@ -4,14 +4,26 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class InitProvider extends ContentProvider {
+    private static final String TAG = "InitProvider";
+
     @Override
     public boolean onCreate() {
-        AppCheck.start(getContext());
+        try {
+            Log.i(TAG, "Starting AppCheck hook initialization...");
+            AppCheck.start(getContext());
+            Log.i(TAG, "AppCheck hook initialization completed successfully.");
+        } catch (Error e) {
+            Log.e(TAG, "Fatal error during AppCheck initialization: " + Log.getStackTraceString(e));
+            // Do not crash the app - just log the error
+        } catch (Exception e) {
+            Log.e(TAG, "Exception during AppCheck initialization: " + Log.getStackTraceString(e));
+        }
         return false;
     }
 
